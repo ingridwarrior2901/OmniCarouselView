@@ -8,11 +8,11 @@
 
 import UIKit
 
-public class OmniCarouselView: UIView, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate {
+open class OmniCarouselView: UIView, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate {
     public enum Content {
-        case ImageUrl(NSURL)
-        case Image(UIImage)
-        case View(UIView)
+        case imageUrl(URL)
+        case image(UIImage)
+        case view(UIView)
     }
     
     // use infinite loop
@@ -20,36 +20,36 @@ public class OmniCarouselView: UIView, UICollectionViewDataSource, UICollectionV
     // show pager
     @IBInspectable var pager: Bool = true
     
-    let collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: UICollectionViewFlowLayout())
+    let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
     
     let rightArrow = UIImageView(image: OmniCarouselView.loadImage("arrow-right"))
     let leftArrow = UIImageView(image: OmniCarouselView.loadImage("arrow-left"))
     
-    public var contents: [Content] = [] {
+    open var contents: [Content] = [] {
         didSet {
             self.contentsChanged()
         }
     }
     
     // infinite loop
-    private var loopContents: [Content]?
-    private var positionFixed = false
+    fileprivate var loopContents: [Content]?
+    fileprivate var positionFixed = false
     
     // pager
-    private var pagerView: PagerView?
+    fileprivate var pagerView: PagerView?
     
     let CellId = "carousel_cell"
     
-    override public func awakeFromNib() {
+    override open func awakeFromNib() {
         self.addSubview(collectionView)
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.registerClass(OmniCarouselViewCell.self, forCellWithReuseIdentifier: CellId)
+        collectionView.register(OmniCarouselViewCell.self, forCellWithReuseIdentifier: CellId)
         
         
-        collectionView.pagingEnabled = true
+        collectionView.isPagingEnabled = true
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.scrollDirection = .Horizontal
+            layout.scrollDirection = .horizontal
         }
         collectionView.backgroundColor = self.backgroundColor
         collectionView.showsHorizontalScrollIndicator = false
@@ -57,18 +57,18 @@ public class OmniCarouselView: UIView, UICollectionViewDataSource, UICollectionV
         if pager {
             self.pagerView = PagerView()
             if let v = self.pagerView {
-                v.backgroundColor = UIColor.clearColor()
+                v.backgroundColor = UIColor.clear
                 self.addSubview(v)
             }
         }
     }    
     
-    private func contentsChanged() {
+    fileprivate func contentsChanged() {
         if infinite {
             // for infinite loop
             self.loopContents = self.contents
             if let item = self.contents.last {
-                self.loopContents?.insert(item, atIndex: 0)
+                self.loopContents?.insert(item, at: 0)
             }
             if let item = self.contents.first {
                 self.loopContents?.append(item)
@@ -86,28 +86,28 @@ public class OmniCarouselView: UIView, UICollectionViewDataSource, UICollectionV
         if let pagerView = self.pagerView {
             pagerView.count = self.contents.count
             pagerView.current = 0
-            self.bringSubviewToFront(pagerView)
+            self.bringSubview(toFront: pagerView)
         }
     }
     
-    private func showArrows() {
+    fileprivate func showArrows() {
         [leftArrow, rightArrow].forEach { (view) -> () in
             self.addSubview(view)
-            UIView.animateWithDuration(3.0, animations: { () -> Void in
+            UIView.animate(withDuration: 3.0, animations: { () -> Void in
                 view.alpha = 0.0
-            }) { (s) -> Void in
+            }, completion: { (s) -> Void in
                 view.removeFromSuperview()
-            }
+            }) 
         }
     }
     
     
-    public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return loopContents?.count ?? contents.count
     }
     
-    public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellId, forIndexPath: indexPath)
+    open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellId, for: indexPath)
         if let cell = cell as? OmniCarouselViewCell {
             let c = loopContents?[indexPath.row] ?? contents[indexPath.row];
             cell.setContent(c)
@@ -115,29 +115,29 @@ public class OmniCarouselView: UIView, UICollectionViewDataSource, UICollectionV
         return cell;
     }
     
-    public func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+    open func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if  infinite && !self.positionFixed {
             self.positionFixed = true
             // scroll to default position for infinite loop
-            let indexPath = NSIndexPath(forItem: 1, inSection: 0)
-            collectionView.scrollToItemAtIndexPath(indexPath, atScrollPosition: UICollectionViewScrollPosition.Left, animated: false)
+            let indexPath = IndexPath(item: 1, section: 0)
+            collectionView.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.left, animated: false)
         }
     }
     
-    public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return self.bounds.size
     }
     
-    public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
     
-    public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
     
     
-    override public func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
         self.collectionView.frame = self.bounds
         rightArrow.frame = CGRect(x: self.frame.width - 48, y: self.frame.height/2 - 24, width: rightArrow.frame.width, height: rightArrow.frame.height)
@@ -148,27 +148,27 @@ public class OmniCarouselView: UIView, UICollectionViewDataSource, UICollectionV
         }
     }
     
-    class func loadImage(name: String) -> UIImage? {
-        let podBundle = NSBundle(forClass: OmniCarouselView.self)
-        if let url = podBundle.URLForResource("OmniCarouselView", withExtension: "bundle") {
-            let bundle = NSBundle(URL: url)
-            return UIImage(named: name, inBundle: bundle, compatibleWithTraitCollection: nil)
+    class func loadImage(_ name: String) -> UIImage? {
+        let podBundle = Bundle(for: OmniCarouselView.self)
+        if let url = podBundle.url(forResource: "OmniCarouselView", withExtension: "bundle") {
+            let bundle = Bundle(url: url)
+            return UIImage(named: name, in: bundle, compatibleWith: nil)
         }
         return nil
     }
     
-    public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         // Calculate where the collection view should be at the right-hand end item
         var page = Int(scrollView.contentOffset.x / frame.width)
         if let lContents = self.loopContents {
             let right = Int(self.frame.width) * (lContents.count - 1)
             if Int(scrollView.contentOffset.x) >= right {
-                let indexPath = NSIndexPath(forItem: 1, inSection: 0)
-                collectionView.scrollToItemAtIndexPath(indexPath, atScrollPosition: UICollectionViewScrollPosition.Left, animated: false)
+                let indexPath = IndexPath(item: 1, section: 0)
+                collectionView.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.left, animated: false)
                 page = 1
             } else if (scrollView.contentOffset.x == 0)  {
-                let indexPath = NSIndexPath(forItem: (lContents.count - 2), inSection: 0)
-                collectionView.scrollToItemAtIndexPath(indexPath, atScrollPosition: UICollectionViewScrollPosition.Left, animated: false)
+                let indexPath = IndexPath(item: (lContents.count - 2), section: 0)
+                collectionView.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.left, animated: false)
                 page = lContents.count - 2
             }
         }

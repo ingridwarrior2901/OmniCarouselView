@@ -1,26 +1,22 @@
 PODS:
-  - Alamofire (3.3.0)
-  - AlamofireImage (2.4.0):
-    - Alamofire (~> 3.3)
-  - Nimble (3.2.0)
+  - Alamofire (4.3.0)
+  - AlamofireImage (3.2.0):
+    - Alamofire (~> 4.1)
   - OmniCarouselView (0.1.0):
-    - AlamofireImage (~> 2.0)
-  - Quick (0.9.1)
+    - AlamofireImage (~> 3.1)
 
 DEPENDENCIES:
-  - Nimble (~> 3.0)
   - OmniCarouselView (from `../`)
-  - Quick (~> 0.8)
 
 EXTERNAL SOURCES:
   OmniCarouselView:
     :path: ../
 
 SPEC CHECKSUMS:
-  Alamofire: 9054db4a1b1ca9e363223183e01cea380159a27c
-  AlamofireImage: 87408b652e0f5ae5fe364035f15aea8b9b24c77e
-  Nimble: 703854335d181df169bbca9c97117b5cf8c47c1d
-  OmniCarouselView: 335ad7d42e813f1f611926af1f443551da35b681
-  Quick: a5221fc21788b6aeda934805e68b061839bc3165
+  Alamofire: 856a113053a7bc9cbe5d6367a555d773fc5cfef7
+  AlamofireImage: 157ed682cc81d3b9db4fb90c1f12180ac552d93b
+  OmniCarouselView: 796d098a8337d6c41db3173a419f8b3e1c20bc3d
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: 51472cef74d3fd7edcaf1b00dd136aae1cd31e58
+
+COCOAPODS: 1.1.1

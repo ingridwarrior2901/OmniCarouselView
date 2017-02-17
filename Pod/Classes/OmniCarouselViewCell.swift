@@ -24,14 +24,14 @@ class OmniCarouselViewCell: UICollectionViewCell {
         setup()
     }
     
-    func setContent(c: OmniCarouselView.Content) {
+    func setContent(_ c: OmniCarouselView.Content) {
         self.anyView?.removeFromSuperview()
         switch c {
-        case .ImageUrl(let url):
-            self.imageView.af_setImageWithURL(url)
-        case .Image(let image):
+        case .imageUrl(let url):
+            self.imageView.af_setImage(withURL: url)
+        case .image(let image):
             self.imageView.image = image
-        case .View(let view):
+        case .view(let view):
             self.anyView = view
             self.addSubview(view)
         }
@@ -39,7 +39,7 @@ class OmniCarouselViewCell: UICollectionViewCell {
     
     func setup() {        
         self.contentView.autoresizingMask = autoresizingMask;
-        self.imageView.contentMode = UIViewContentMode.ScaleAspectFit
+        self.imageView.contentMode = UIViewContentMode.scaleAspectFit
         self.addSubview(self.imageView)
     }
     

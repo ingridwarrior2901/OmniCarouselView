@@ -46,5 +46,5 @@ It can customize
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  s.dependency 'AlamofireImage', '~> 2.0'
+  s.dependency 'AlamofireImage', '~> 3.1'
 end
